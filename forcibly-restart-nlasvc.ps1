@@ -21,41 +21,27 @@ function ForciblyRestartService($TargetName) {
         return
     }
     Write-Host -NoNewline "Attempting to restart $TargetName nicely..."
-
     Restart-Service -Name NlaSvc
-
     $newPid = Get-ServicePidFromName($TargetName)
-
     if ($targetPID -ne $newPID) {
         Write-Host -ForegroundColor Green 'Success.'
         return
     }
-
     Write-Host -ForegroundColor Red 'System refused.'
-
     Write-Host -NoNewline "Attempting to restart $TargetName with -Force option..."
-
     Start-Sleep -s 1
-
     Restart-Service -Name NlaSvc -Force
-
     $newPid = Get-ServicePidFromName($TargetName)
-
     if ($targetPID -ne $newPID) {
         Write-Host -ForegroundColor Green 'Restarted NlaSvc forcefully.'
         return
     }
-
     Write-Host -ForegroundColor Red 'System refused.'
-
     Write-Host -NoNewline "Attempting to restart $TargetName by killing its PID..."
-
     Start-Sleep -s 1
     taskkill.exe /F /PID $targetPID 2>&1 >$null
-
     Start-Sleep -s 1
     $newPid = Get-ServicePidFromName($TargetName)
-
     if ($targetPID -ne $newPID) {
         Write-Host -ForegroundColor Green 'Success'
     } else {
@@ -67,4 +53,4 @@ function ForciblyRestartService($TargetName) {
 $TargetName='NlaSvc'
 ForciblyRestartService($TargetName) 2>$null
 Write-Host 'Sanity check: NlaSvc PID is now'$(Get-ServicePidFromName($TargetName))
-read-host 'Press ENTER to continue'
+Read-Host 'Press ENTER to continue'
