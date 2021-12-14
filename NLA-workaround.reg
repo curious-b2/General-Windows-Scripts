@@ -1,0 +1,58 @@
+Windows Registry Editor Version 5.00
+
+READ THIS ENTIRE THING, EDIT THE FILE, THEN REMOVE THIS LINE
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NlaSvc\Parameters\Internet]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; IPv4:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; DNS Probing -- using CloudFlare's 
+
+; The DNS probe mechanism will use attempt to resolve this specified FQDN:
+
+"ActiveDnsProbeHost"="host.example.com"
+
+; And the specified FQDN must resolve to this specified IP:
+
+"ActiveDnsProbeContent"="192.0.2.0"
+
+; Note:  A DNS response indicating a record wasn't found (e.g., NXDOMAIN) will
+; _usually_ result in an NLA status of "No Internet Connection", whereas an IP
+; other than that specified will result in NLA assuming you're behind some
+; kind of web portal, thus popping open a web browser in an attempt to force
+; network login/authentication.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Web server probing
+
+; The Web probe mechanism will go to this server:
+
+"ActiveWebProbeHost"="www.example.com"
+
+; And ask for this file:
+
+"ActiveWebProbePath"="ncis.txt"
+
+; The resulting URI (e.g., "www.example.com/ncis.txt") must contain the
+; following text (this is the default value):
+
+"ActiveWebProbeContent"="Microsoft NCSI"
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; IPv6:
+; Similar to IPv4 entries -- see comments in IPv4 section.
+"ActiveDnsProbeContentV6"="2001:db8::"
+"ActiveDnsProbeHostV6"="host.example.com"
+"ActiveWebProbeHostV6"="www.example.com"
+"ActiveWebProbePathV6"="ncsi.txt"
+"ActiveWebProbeContentV6"="Microsoft NCSI"
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Active probing toggle - disable by setting to the value of 0 (recommend only
+; as a last resort; this seems to break NLA randomly on one of my systems.)
+"EnableActiveProbing"=dword:00000001
